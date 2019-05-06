@@ -1,0 +1,146 @@
+﻿@model CartViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+
+@if (Model.EnablePopUpWarning)
+{
+    @section MyScripts {
+        <script type="text/javascript">
+            $('#myModal').modal('show');
+        </script>
+    }
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">INFO MESSAGE</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Unfortunately we do not have the quantity you requested :( <br /><u>In the following products: </u></p>
+
+                    @foreach (var unavailableProduct in Model.UnavailableProducts)
+                    {
+                        <p><b>- @unavailableProduct.Name</b></p>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<div>
+    <table id="cart" class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <th style="width:50%">Product</th>
+                <th style="width:10%">Price</th>
+                <th style="width:8%">Quantity</th>
+                <th style="width:22%" class="text-center">Subtotal</th>
+                <th style="width:10%"></th>
+            </tr>
+        </thead>
+        @{ double total = 0;}
+        <tbody>
+            @if (User.Identity.IsAuthenticated)
+            {
+                @foreach (var cart in Model.Carts)
+                {
+                    <tr>
+                        <div class="col-lg-12">
+                            <td data-th="Product">
+
+                                <div class="row">
+                                    <div class="col-sm-2 hidden-xs"><img src="http://placehold.it/100x100" alt="..." class="img-responsive" /></div>
+                                    <div class="col-sm-10">
+                                        <h4 class="nomargin">@cart.Product.Name</h4>
+                                        <p>@cart.Product.Description</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-th="Price">@cart.Product.Price</td>
+
+                            <td data-th="Quantity">
+                                <form asp-action="UpdateQuantity" class="update-form">
+                                    <input asp-for="@cart.Quantity" class="form-control text-center" value="@cart.Quantity">
+                                    <input type="hidden" asp-for="@cart.Id" />
+                                    <span asp-validation-for="@cart.Quantity" class="text-danger"></span>
+                                    <button class="btn btn-info btn-sm"><i class="fa fa-refresh"></i></button>
+                                </form>
+                            </td>
+                            <td data-th="Subtotal" class="text-center">@(cart.Product.Price * cart.Quantity)</td>
+                            <td class="actions" data-th="">
+
+
+
+
+                                <form asp-action="Delete" asp-route-id="@cart.Product.ProductId" method="post">
+                                    <button class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></button>
+                                </form>
+                            </td>
+                        </div>
+                    </tr>
+                    total += (cart.Product.Price * cart.Quantity);
+                }
+            }
+            else
+            {
+                foreach (var item in ViewBag.cart)
+                {
+                    <tr>
+                        <div class="col-lg-12">
+                            <td data-th="Product">
+
+                                <div class="row">
+                                    <div class="col-sm-2 hidden-xs"><img src="http://placehold.it/100x100" alt="..." class="img-responsive" /></div>
+                                    <div class="col-sm-10">
+                                        <h4 class="nomargin">@item.Product.Name</h4>
+                                        <p>@item.Product.Description</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-th="Price">@item.Product.Price</td>
+
+                            <td data-th="Quantity">
+                                <form asp-action="UpdateQuantity" asp-route-id="@item.Product.ProductId" asp-route-quantity="@item.Quantity" class="update-form">
+
+                                    <input type="number" class="form-control text-center" name="quantity" value="@item.Quantity">
+
+                                    <button class="btn btn-info btn-sm"><i class="fa fa-refresh"></i></button>
+                                </form>
+                            </td>
+                            <td data-th="Subtotal" class="text-center">@(item.Product.Price * item.Quantity)</td>
+                            <td class="actions" data-th="">
+
+
+
+
+                                <form asp-action="Delete" asp-route-id="@item.Product.ProductId" method="post">
+                                    <button class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></button>
+                                </form>
+                            </td>
+                        </div>
+                    </tr>
+                    total += (item.Product.Price * item.Quantity);
+                }
+            }
+
+        </tbody>
+
+        <tfoot>
+
+            <tr>
+                <td><a href="#" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
+                <td colspan="2" class="hidden-xs"></td>
+                <td class="hidden-xs text-center"><strong>@total $</strong></td>
+                <td><a class="btn btn-success btn-block" asp-area="" asp-controller="Cart" asp-action="CheckOut">Checkout <i class="fa fa-angle-right"></i></a></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EPaper</title>
+
+    <environment include="Development">
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/epaper-logo.png" /></a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                <li class="nav-item"><a class="nav-link" role="button" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                <li class="dropdown">
+                    <a class="nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Product
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="Products">
+                        <a class="dropdown-item" asp-area="" asp-controller="Book" asp-action="Index">Books</a>
+                        <a class="dropdown-item" asp-area="" asp-controller="Magazine" asp-action="Index">Magazines</a>
+                        <a class="dropdown-item" asp-area="" asp-controller="Comic" asp-action="Index">Comics</a>
+                        <a class="dropdown-item" asp-area="" asp-controller="Cd" asp-action="Index">CDs</a>
+                    </div>
+
+                </li>
+                @if (this.User.IsInRole("Admin"))
+                {
+                    <li style="padding-top: 2.3%!important;padding-left:1%!important;"><a asp-area="" asp-controller="Home" asp-action="AdminIndex">Administration</a></li>
+                }
+
+            </ul>
+        </div>
+
+        <a href="@Url.Action("Index", "Cart")" class="fa fa-opencart fa-2x my-cart"></a>
+
+        <div>
+            <partial name="_LoginPartial" />
+        </div>
+    </nav>
+
+
+
+    <partial name="_CookieConsentPartial" />
+
+    <div class="body-content">
+        @RenderBody()
+
+
+        <div class="row footer-bg bg-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h4 class="my-red">Top Categories</h4>
+                        <dd><a asp-action="Index" asp-controller="Book">Books</a></dd>
+                        <dd><a asp-action="Index" asp-controller="Magazine">Magazines</a></dd>
+                        <dd><a asp-action="Index" asp-controller="Comic">Comics</a></dd>
+                        <dd><a asp-action="Index" asp-controller="Cd">CDs</a></dd>
+                    </div>
+                    <div class="col-sm-4">
+                        <h4 class="my-red">Shop</h4>
+                        <dd><i class="fa fa-map-marker my-red"></i> Monday - Friday: 11:00 - 20:00</dd>
+                        <dd><i class="fa fa-location-arrow my-red"></i> Aisxilou 7 Athens Greece</dd>
+                        <dd><i class="fa fa-phone my-red"></i> 2101234567</dd>
+                        <dd><i class="fa fa fa-envelope my-red"></i><a href="info@epaper.com"> info@epaper.com</a></dd>
+                    </div>
+                    <div class="col-sm-4">
+                        <h4 class="my-red">EPaper</h4>
+                        <dd><a asp-action="About" asp-controller="Home">About Us</a></dd>
+                        <dd><a asp-action="Contact" asp-controller="Home">Contact</a></dd>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <environment include="Development">
+            <script src="~/lib/jquery/dist/jquery.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+            <script src="~/js/site.js" asp-append-version="true"></script>
+        </environment>
+        <environment exclude="Development">
+            <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                    asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                    asp-fallback-test="window.jQuery"
+                    crossorigin="anonymous"
+                    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+            </script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+                    asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                    asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                    crossorigin="anonymous"
+                    integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
+            </script>
+            <script src="~/js/site.min.js" asp-append-version="true"></script>
+        </environment>
+
+        @RenderSection("MyScripts", required: false)
+        @RenderSection("Scripts", required: false)
+
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script>
+            AOS.init();
+        </script>
+</body>
+</html>
